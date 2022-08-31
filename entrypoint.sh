@@ -13,6 +13,7 @@ set -euo pipefail
 : "${ARCHI_CSV_REPORT_ENABLED:=false}"
 : "${ARCHI_EXPORT_MODEL_ENABLED:=true}"
 : "${ARCHI_APP:=com.archimatetool.commandline.app}"
+: "${ARCHI_REPORT_BUILD_NUM:=x}" # you need to pass the variable in docker run as "-e ARCHI_REPORT_BUILD_NUM=(The build number of GIHUB or GITLAB)"
 
 : "${GITHUB_SERVER_URL:=https://github.com}"
 : "${GITHUB_PAGES_BRANCH:=gh-pages}"
@@ -121,6 +122,8 @@ update_html() {
     _li="<li><a href=\"$_project.archimate\" class=\"go\">Model</a></li>"
     sed "/modal.*i18n-about/i $_li" -i "$ARCHI_REPORT_PATH/index.html"
   fi
+  # Add build number to about section in HTML report
+  sed "s|Archi HTML Report plugin|Archi HTML Report (build: $ARCHI_REPORT_BUILD_NUM)|g" -i "$ARCHI_REPORT_PATH/css/i18n/en.css"
 }
 
 # Git clone wrap
